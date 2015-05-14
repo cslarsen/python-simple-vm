@@ -1,10 +1,26 @@
 #!/usr/bin/env python
+# coding: utf-8
+
+"""
+A simple VM interpreter.
+
+Code from the post at http://csl.name/post/vm/
+This version should work on both Python 2 and 3.
+"""
 
 from __future__ import print_function
-from StringIO import StringIO
 from collections import deque
+from io import StringIO
 import sys
 import tokenize
+
+
+def get_input(*args, **kw):
+    """Read a string from standard input."""
+    if sys.version[0] == "2":
+        return raw_input(*args, **kw)
+    else:
+        return input(*args, **kw)
 
 
 class Stack(deque):
@@ -119,7 +135,7 @@ class Machine:
         sys.stdout.flush()
 
     def read(self):
-        self.push(raw_input())
+        self.push(get_input())
 
     def cast_int(self):
         self.push(int(self.pop()))
@@ -175,7 +191,14 @@ def parse(text):
     # Note that the tokenizer module is intended for parsing Python source
     # code, so if you're going to expand on the parser, you may have to use
     # another tokenizer.
-    tokens = tokenize.generate_tokens(StringIO(text).readline)
+
+    if sys.version[0] == "2":
+        stream = StringIO(unicode(text))
+    else:
+        stream = StringIO(text)
+
+    tokens = tokenize.generate_tokens(stream.readline)
+
     for toknum, tokval, _, _, _ in tokens:
         if toknum == tokenize.NUMBER:
             yield int(tokval)
@@ -207,7 +230,7 @@ def repl():
 
     while True:
         try:
-            source = raw_input("> ")
+            source = get_input("> ")
             code = list(parse(source))
             code = constant_fold(code)
             Machine(code).run()
