@@ -166,27 +166,6 @@ class Machine:
             print(" - type %s, value '%s'" % (type(v), v))
 
 
-def examples():
-    print("** Program 1: Runs the code for `print((2+3)*4)`")
-    Machine([2, 3, "+", 4, "*", "println"]).run()
-
-    print("\n** Program 2: Ask for numbers, computes sum and product.")
-    Machine([
-        '"Enter a number: "', "print", "read", "cast_int",
-        '"Enter another number: "', "print", "read", "cast_int",
-        "over", "over",
-        '"Their sum is: "', "print", "+", "println",
-        '"Their product is: "', "print", "*", "println"
-    ]).run()
-
-    print("\n** Program 3: Shows branching and looping (use CTRL+D to exit).")
-    Machine([
-        '"Enter a number: "', "print", "read", "cast_int",
-        '"The number "', "print", "dup", "print", '" is "', "print",
-        2, "%", 0, "==", '"even."', '"odd."', "if", "println",
-        0, "jmp" # loop forever!
-    ]).run()
-
 def parse(text):
     # Note that the tokenizer module is intended for parsing Python source
     # code, so if you're going to expand on the parser, you may have to use
@@ -258,6 +237,28 @@ def test(code = [2, 3, "+", 5, "*", "println"]):
     result = a.data_stack == b.data_stack
     print("Result: %s" % ("OK" if result else "FAIL"))
     return result
+
+def examples():
+    print("** Program 1: Runs the code for `print((2+3)*4)`")
+    Machine([2, 3, "+", 4, "*", "println"]).run()
+
+    print("\n** Program 2: Ask for numbers, computes sum and product.")
+    Machine([
+        '"Enter a number: "', "print", "read", "cast_int",
+        '"Enter another number: "', "print", "read", "cast_int",
+        "over", "over",
+        '"Their sum is: "', "print", "+", "println",
+        '"Their product is: "', "print", "*", "println"
+    ]).run()
+
+    print("\n** Program 3: Shows branching and looping (use CTRL+D to exit).")
+    Machine([
+        '"Enter a number: "', "print", "read", "cast_int",
+        '"The number "', "print", "dup", "print", '" is "', "print",
+        2, "%", 0, "==", '"even."', '"odd."', "if", "println",
+        0, "jmp" # loop forever!
+    ]).run()
+
 
 if __name__ == "__main__":
     try:
