@@ -215,11 +215,12 @@ def constant_fold(code):
     while True:
         # Find two consecutive numbers and an arithmetic operator
         for i, (a, b, op) in enumerate(zip(code, code[1:], code[2:])):
-            if isinstance(a, int) and isinstance(b, int) and op in {"+", "-", "*", "/"}:
+            if isinstance(a, int) and isinstance(b, int) \
+                    and op in {"+", "-", "*", "/"}:
                 m = Machine((a, b, op))
                 m.run()
                 code[i:i+3] = [m.top()]
-                print("Constant-folded (%s %s %s) to %s" % (a, op, b, m.top()))
+                print("Constant-folded %s%s%s to %s" % (a,op,b,m.top()))
                 break
         else:
             break
